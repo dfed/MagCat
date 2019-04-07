@@ -1,7 +1,5 @@
 source ~/.git-completion.bash
 
-stty erase ^?
-
 # Ensure our .ssh/id_rsa passphrase is unlocked in the keychain
 ssh-add -K > /dev/null 2>&1
 
