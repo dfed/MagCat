@@ -1,0 +1,69 @@
+source ~/.git-completion.bash
+
+stty erase ^?
+
+# Ensure our .ssh/id_rsa passphrase is unlocked in the keychain
+ssh-add -K > /dev/null 2>&1
+
+alias cp='cp -i'	# prompt before overwriting file
+alias mv='mv -i'	# same
+alias ls='ls -lagP'
+alias ll="ls -l"
+alias gtar="tar -czvf"
+alias gos="cd ~/Documents/source"
+alias gompp="cd ~/Library/MobileDevice/Provisioning\ Profiles"
+
+alias xfail="eval `ssh-agent`"
+alias be="bundle exec"
+alias ddd="rm -rf ~/Library/Developer/Xcode/DerivedData/*"
+alias dmpps="rm -r ~/Library/MobileDevice/Provisioning\ Profiles"
+
+alias gti="git"
+
+alias gpushpublicpod='pod trunk push --verbose'
+alias gclean='git clean -dff'
+alias gcleanall='git clean -dfx'
+alias log="git log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(bold blue)%h - %C(reset)%C(green)(%ar)%C(reset) - %s %C(dim)- %an%C(reset)%C(yellow)%d'"
+alias gpm='git co master && git pull origin master'
+
+function gprune {
+  git fetch -p && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done
+}
+
+# requires `brew install terminal-notifier`
+function notify {
+  local title="Succeeded"
+  # Capture the parameter list for later display.
+  local message=$@
+  if [ $# -ne 0 ]; then
+    # Execute the parameters.
+    eval $@
+  else
+    # Get the last line of history.
+    message="$(history 1 | awk '{$1="";$2="";print}')"
+  fi
+  # Get the exit status of the last-run command.
+  local retVal=$?
+  if [ $retVal -ne 0 ]; then
+    title="Failed"
+  fi
+  # Notify the user that the command is done.
+  terminal-notifier -title "$title" -message "$message" -sound "default" -ignoreDnD
+}
+
+alias entitlements="codesign -vvvv -d --entitlements -"
+
+# up arrow
+bind '"[A":history-search-backward'
+#down arrow
+bind '"[B":history-search-forward'
+
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
+
+source $HOME/Documents/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/Documents/source/FancyPantsPS1/fancypants_ps1_bashrc
+export GIT_GEMS_PS1_SHOWUNTRACKEDFILES=true
+
+source $HOME/.git_author_email
+source $HOME/.custom_bash_profile
