@@ -1,7 +1,7 @@
 [user]
 	name = Dan Federman
 [core]
-	excludesfile = /Users/dfed/.gitignore_global
+	excludesfile = ~/.gitignore_global
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
