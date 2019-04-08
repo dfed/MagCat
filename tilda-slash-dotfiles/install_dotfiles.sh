@@ -2,18 +2,24 @@
 
 set -e
 
+DOTFILES_DIR="tilda-slash-dotfiles"
+
 echo "Installing dot files"
 
-for file in tilda-slash-dotfiles/* # For each file in tilda-slash-dotfiles
+for file in $DOTFILES_DIR/* # For each file in $DOTFILES_DIR
 do    
     file_name=$(basename "$file")
 	if [ "$file_name" == "$(basename $0)" ]; then
 		# Skip the current script
 		continue
-	fi    
+	fi
     
-    echo "- Linking $file_name"
-    ln -sF $PWD/$file_name "$HOME/.$file_name"
+    destination="$PWD/$DOTFILES_DIR/$file_name"
+    source="$HOME/.$file_name"
+    if [ "$(readlink -- $source)" != $destination ]; then
+        echo "- Linking $file_name"
+        ln -sF $destination $source
+    fi
 done
 
 if [ ! -f "$HOME/.custom_bash_profile" ]; then

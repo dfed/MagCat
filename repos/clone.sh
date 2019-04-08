@@ -7,11 +7,10 @@ function clone_repo_into_destination {
     DESTINATION=$2
 
     if [ ! -d "$DESTINATION" ]; then
+        echo "Cloning $REPO"
         git clone $REPO $DESTINATION
     fi
 }
-
-echo "Cloning repositories"
 
 clone_repo_into_destination git@github.com:dfed/FancyPantsPS1.git $HOME/Documents/source/FancyPantsPS1
 clone_repo_into_destination git@github.com:dfed/grb.git $HOME/Documents/source/grb
