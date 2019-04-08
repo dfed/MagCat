@@ -16,8 +16,10 @@ do
     ln -sF $PWD/$file_name "$HOME/.$file_name"
 done
 
-echo "- Creating custom_bash_profile"
-touch $HOME/.custom_bash_profile
+if [ ! -f "$HOME/.custom_bash_profile" ]; then
+    echo "- Creating custom_bash_profile"
+    touch $HOME/.custom_bash_profile
+fi
 
 if [ ! -z $1 ]; then
     echo "- Writing git_author_email"
