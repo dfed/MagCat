@@ -75,9 +75,13 @@ echo "Installing dot files"
 echo "- Creating custom_bash_profile"
 touch $HOME/.custom_bash_profile
 
-echo "- Creating git_author_email"
-touch $HOME/.git_author_email
-echo "export GIT_AUTHOR_EMAIL=$1; export GIT_COMMITTER_EMAIL=$1; export EMAIL=$1" > $HOME/.git_author_email
+if [ ! -z $1 ]; then
+    echo "- Writing git_author_email"
+    touch $HOME/.git_author_email
+    echo "export GIT_AUTHOR_EMAIL=$1; export GIT_COMMITTER_EMAIL=$1; export EMAIL=$1" > $HOME/.git_author_email
+else
+    echo "- Skipping git_author_email: no email address provided"
+fi
 
 pushd tilda-slash-dotfiles > /dev/null 2>&1
 for file in * # For each file in tilda-slash-dotfiles
