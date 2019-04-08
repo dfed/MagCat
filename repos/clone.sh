@@ -8,8 +8,6 @@ function clone_repo_into_destination {
 
     if [ ! -d "$DESTINATION" ]; then
         git clone $REPO $DESTINATION
-    else
-        echo "Skipping $REPO -- $DESTINATION already exists"
     fi
 }
 
