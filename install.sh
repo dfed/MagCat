@@ -9,4 +9,5 @@ set -e
 ./tilda-slash-preferences/install_preferences.sh $@
 ./tilda-slash-dotfiles/install_dotfiles.sh $@
 
-echo "Installation complete. Run \`source $HOME/.bash_profile\` to pick up changes."
+echo "Installation complete. Run the following command to pick up changes:"
+echo "source $HOME/.bash_profile"
