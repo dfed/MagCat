@@ -62,3 +62,7 @@ export GIT_GEMS_PS1_SHOWUNTRACKEDFILES=true
 
 source $HOME/.git_author_email
 source $HOME/.custom_bash_profile
+
+if which ruby >/dev/null && which gem >/dev/null; then
+  PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
+fi
