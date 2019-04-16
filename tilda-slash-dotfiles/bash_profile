@@ -15,7 +15,6 @@ alias dmpps="rm -r ~/Library/MobileDevice/Provisioning\ Profiles"
 
 alias gti="git"
 
-alias gpushpublicpod='pod trunk push --verbose'
 alias gclean='git clean -dff'
 alias gcleanall='git clean -dfx'
 alias log="git log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(bold blue)%h - %C(reset)%C(green)(%ar)%C(reset) - %s %C(dim)- %an%C(reset)%C(yellow)%d'"
@@ -24,6 +23,8 @@ alias gpm='git co master && git pull origin master'
 function gprune {
   git fetch -p --force && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done
 }
+
+alias podpush='pod trunk push --verbose'
 
 # requires `brew install terminal-notifier`
 function notify {
