@@ -14,6 +14,18 @@ if ! which -s terminal-notifier; then
     brew install terminal-notifier
 fi
 
+# Install git if it doesn't exist
+if ! which -s git; then
+    echo "Installing git"
+    brew install git
+fi
+
+# Install bash-completion if it doesn't exist
+if [ ! -f /usr/local/etc/profile.d/bash_completion.sh ]; then
+    echo "Installing bash-completion"
+    brew install bash-completion
+fi
+
 # Install carthage if it doesn't exist
 if ! which -s carthage; then
     echo "Installing carthage"
