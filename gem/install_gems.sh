@@ -8,7 +8,7 @@ if [ -z "$(gem list --no-versions | grep cocoapods)" ]; then
     gem install --user-install cocoapods
 fi
 
-# Install cocoapods if it doesn't exist
+# Install bundler if it doesn't exist
 if [ -z "$(gem list --no-versions | grep bundler)" ]; then
     echo "Installing bundler"
     gem install --user-install bundler
