@@ -55,7 +55,8 @@ bind '"[A":history-search-backward'
 bind '"[B":history-search-forward'
 
 # Setup bash completion
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+[[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]] && source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
+[[ -r "$(brew --prefix)/etc/bash_completion.d/git-completion.bash" ]] && source "$(brew --prefix)/etc/bash_completion.d/git-completion.bash"
 
 source $HOME/Documents/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/Documents/source/FancyPantsPS1/fancypants_ps1_bashrc
 export GIT_GEMS_PS1_SHOWUNTRACKEDFILES=true
