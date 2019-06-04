@@ -10,4 +10,4 @@ set -e
 ./tilda-slash-dotfiles/install_dotfiles.sh $@
 
 echo "Installation complete. Run the following command to pick up changes:"
-echo "source $HOME/.bash_profile"
+echo "source $HOME/.zshrc"
