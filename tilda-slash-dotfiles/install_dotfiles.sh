@@ -27,6 +27,11 @@ if [ ! -f "$HOME/.custom_bash_profile" ]; then
     touch $HOME/.custom_bash_profile
 fi
 
+if [ ! -f "$HOME/.custom_zshrc" ]; then
+    echo "- Creating custom_zshrc"
+    touch $HOME/.custom_zshrc
+fi
+
 if [ ! -z $1 ]; then
     echo "- Writing git_author_email"
     touch $HOME/.git_author_email

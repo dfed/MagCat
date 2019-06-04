@@ -1,4 +1,4 @@
-source .shared_profile
+source $HOME/.shared_profile
 
 # up arrow
 bind '"[A":history-search-backward'
@@ -10,3 +10,4 @@ bind '"[B":history-search-forward'
 [[ -r "$(brew --prefix)/etc/bash_completion.d/git-completion.bash" ]] && source "$(brew --prefix)/etc/bash_completion.d/git-completion.bash"
 
 source $HOME/Documents/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/Documents/source/FancyPantsPS1/fancypants_ps1_bashrc
+source $HOME/.custom_bash_profile
