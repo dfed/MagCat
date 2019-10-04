@@ -28,6 +28,8 @@ alias podpush='pod trunk push --verbose'
 
 # requires `brew install terminal-notifier`
 function notify {
+  # Get the exit status of the last-run command.
+  local retVal=$?
   local title="Succeeded"
   # Capture the parameter list for later display.
   local message=$@
@@ -38,8 +40,6 @@ function notify {
     # Get the last line of history.
     message="$(history 1 | awk '{$1="";$2="";print}')"
   fi
-  # Get the exit status of the last-run command.
-  local retVal=$?
   if [ $retVal -ne 0 ]; then
     title="Failed"
   fi
