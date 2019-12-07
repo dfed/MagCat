@@ -14,6 +14,7 @@
 	co = checkout
 	ci = commit
 	st = status
+	mm = merge --no-edit master
 	unstage = reset HEAD --
 [color]
 	ui = true
