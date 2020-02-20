@@ -17,7 +17,7 @@ alias gti="git"
 
 alias gclean='git clean -dff'
 alias gcleanall='git clean -dfx'
-alias glog="git log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(bold blue)%h - %C(reset)%C(green)(%ar)%C(reset) - %s %C(dim)- %an%C(reset)%C(yellow)%d'"
+alias logg="git log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(bold blue)%h - %C(reset)%C(green)(%ar)%C(reset) - %s %C(dim)- %an%C(reset)%C(yellow)%d'"
 alias gpm='git co master && git pull origin master'
 
 export GEM_HOME=$HOME/.gem
