@@ -26,7 +26,7 @@ function gprune {
   git fetch -p --force && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done
 }
 
-alias podpush='pod trunk push --verbose'
+alias podpush='bundle exec pod trunk push --verbose'
 
 # requires `brew install terminal-notifier`
 function notify {
