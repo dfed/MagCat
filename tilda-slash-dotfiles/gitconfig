@@ -16,7 +16,7 @@
 	ci = commit
 	cino = commit --no-verify --no-edit
 	st = status
-	mm = merge --no-edit master
+	mm = merge --no-edit origin/HEAD
 	unstage = reset HEAD --
 [color]
 	ui = true
