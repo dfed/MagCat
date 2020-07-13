@@ -9,5 +9,5 @@ bind '"[B":history-search-forward'
 [[ -r "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]] && source "$(brew --prefix)/etc/profile.d/bash_completion.sh"
 [[ -r "$(brew --prefix)/etc/bash_completion.d/git-completion.bash" ]] && source "$(brew --prefix)/etc/bash_completion.d/git-completion.bash"
 
-source $HOME/Documents/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/Documents/source/FancyPantsPS1/fancypants_ps1_bashrc
+source $HOME/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/source/FancyPantsPS1/fancypants_ps1_bashrc
 source $HOME/.custom_bash_profile

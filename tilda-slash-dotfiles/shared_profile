@@ -6,7 +6,7 @@ alias mv='mv -i'	# same
 alias ls='ls -lagP'
 alias ll="ls -l"
 alias gtar="tar -czvf"
-alias gos="cd ~/Documents/source"
+alias gos="cd ~/source"
 alias gompp="cd ~/Library/MobileDevice/Provisioning\ Profiles"
 
 alias be="bundle exec"

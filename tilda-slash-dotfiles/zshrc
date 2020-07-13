@@ -12,5 +12,5 @@ zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 
-source $HOME/Documents/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/Documents/source/FancyPantsPS1/fancypants_ps1_zshprompt
+source $HOME/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/source/FancyPantsPS1/fancypants_ps1_zshprompt
 source $HOME/.custom_zshrc
