@@ -3,6 +3,8 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	ignorecase = false
+[pull]
+	rebase = true
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
