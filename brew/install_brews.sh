@@ -31,9 +31,3 @@ if ! which -s carthage; then
     echo "Installing carthage"
     brew install carthage
 fi
-
-# Install go if it doesn't exist
-if ! which -s go; then
-    echo "Installing go"
-    brew install go
-fi
