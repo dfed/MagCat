@@ -51,7 +51,11 @@ function notify {
 }
 
 function grb {
-  command=${1:="help"}
+  command=$1
+  if [ $# -ne 2 ]; then
+    echo 'Incorrect number of arguments given'
+    command='help'
+  fi
   current_branch=$(git rev-parse --abbrev-ref HEAD)
   if [ $command = 'new' ]; then
     new_branch=$2
@@ -87,11 +91,11 @@ function grb {
       git branch -D $branch
     fi
   else
-    echo "usage: grb <command> [<args>]
+    echo "usage: grb <command> <branch_name>
 
-    new [branch]\tcreate a new branch
-    mv [branch]\t\trename current branch to 'branch'
-    rm [branch]\t\tdelete branch 'branch'"
+    new <branch_name>\tcreate a new branch named 'branch_name'
+    mv <branch_name>\trename current branch to 'branch_name'
+    rm <branch_name>\tdelete branch 'branch_name'"
   fi
 }
 
