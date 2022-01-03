@@ -50,6 +50,49 @@ function notify {
   terminal-notifier -title "$title" -message "$message" -sound "default" -ignoreDnD
 }
 
+function grb {
+  current_branch=$(git rev-parse --abbrev-ref HEAD)
+  if [ $1 = 'new' ]; then
+    new_branch=$2
+    git push --no-verify origin $current_branch\:refs/heads/$new_branch && \
+    git fetch origin $new_branch:$new_branch && \
+    git checkout $new_branch && \
+    git branch --set-upstream-to origin/$new_branch
+
+  elif [ $1 = 'mv' ]; then
+    if [ -z $3 ]; then
+      old_branch=$current_branch
+      new_branch=$2
+    else
+      old_branch=$2
+      new_branch=$3
+    fi
+    git push --no-verify origin $old_branch\:refs/heads/$new_branch && \
+    git fetch origin $new_branch\:$new_branch && \
+    git checkout $new_branch && \
+    git branch --set-upstream-to origin/$new_branch && \
+    git branch -D $old_branch && \
+    git push --no-verify origin :refs/heads/$old_branch && \
+
+  elif [ $1 = 'rm' ]; then
+    branch=$2
+    git push --no-verify origin :refs/heads/$branch && \
+    if [ $current_branch = $branch ]; then
+      if [ git rev-parse --verify --quiet main > /dev/null ]; then
+        git checkout main && \
+        git branch -D $branch
+      elif [ git rev-parse --verify --quiet master > /dev/null ]; then
+        git checkout master && \
+        git branch -D $branch
+      else
+        echo "Deleted current branch. Change branches and then run 'git branch -D $branch'"
+      fi
+    else
+      git branch -D $branch
+    fi
+  fi
+}
+
 alias entitlements="codesign -vvvv -d --entitlements -"
 
 export GIT_GEMS_PS1_SHOWUNTRACKEDFILES=true
