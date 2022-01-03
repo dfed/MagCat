@@ -74,10 +74,10 @@ function grb {
     branch=$2
     git push --no-verify origin :refs/heads/$branch && \
     if [ $current_branch = $branch ]; then
-      if [ git rev-parse --verify --quiet main > /dev/null ]; then
+      if git rev-parse --verify --quiet main > /dev/null; then
         git checkout main && \
         git branch -D $branch
-      elif [ git rev-parse --verify --quiet master > /dev/null ]; then
+      elif git rev-parse --verify --quiet master > /dev/null; then
         git checkout master && \
         git branch -D $branch
       else
