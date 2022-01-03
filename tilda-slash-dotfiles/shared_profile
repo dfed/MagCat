@@ -103,7 +103,7 @@ alias entitlements="codesign -vvvv -d --entitlements -"
 
 export GIT_GEMS_PS1_SHOWUNTRACKEDFILES=true
 
-source $HOME/.git_author_email
+[ -f $HOME/.git_author_email ] && source $HOME/.git_author_email
 
 PATH=/opt/homebrew/bin:$PATH
 
