@@ -22,6 +22,12 @@ do
     fi
 done
 
+if [ ! -f "$HOME/.bashrc" ]; then
+    echo "- Creating .bashrc"
+    # Make non-login shell use setup from `.bash_profile`
+    ln -sF $HOME/.bash_profile $HOME/.bashrc
+fi
+
 if [ ! -f "$HOME/.custom_bash_profile" ]; then
     echo "- Creating custom_bash_profile"
     touch $HOME/.custom_bash_profile
