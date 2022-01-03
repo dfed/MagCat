@@ -21,7 +21,7 @@ if ! which -s git; then
 fi
 
 # Install bash-completion if it doesn't exist
-if [ ! -f /opt/homebrew/etc/profile.d/bash_completion.sh ]; then
+if [ ! -f "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]; then
     echo "Installing bash-completion"
     brew install bash-completion
 fi
