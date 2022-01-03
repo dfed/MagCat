@@ -31,3 +31,9 @@ if ! which -s carthage; then
     echo "Installing carthage"
     brew install carthage
 fi
+
+# Install gh if it doesn't exist
+if ! which -s gh; then
+    echo "Installing gh"
+    brew install gh
+fi
