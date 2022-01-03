@@ -72,7 +72,7 @@ function grb {
     git checkout $new_branch && \
     git branch --set-upstream-to origin/$new_branch && \
     git branch -D $old_branch && \
-    git push --no-verify origin :refs/heads/$old_branch && \
+    git push --no-verify origin :refs/heads/$old_branch
 
   elif [ $command = 'rm' ]; then
     branch=$2
