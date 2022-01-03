@@ -60,13 +60,8 @@ function grb {
     git branch --set-upstream-to origin/$new_branch
 
   elif [ $1 = 'mv' ]; then
-    if [ -z $3 ]; then
-      old_branch=$current_branch
-      new_branch=$2
-    else
-      old_branch=$2
-      new_branch=$3
-    fi
+    old_branch=$current_branch
+    new_branch=$2
     git push --no-verify origin $old_branch\:refs/heads/$new_branch && \
     git fetch origin $new_branch\:$new_branch && \
     git checkout $new_branch && \
