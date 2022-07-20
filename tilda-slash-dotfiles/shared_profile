@@ -10,7 +10,7 @@ alias gos="cd ~/source"
 alias gompp="cd ~/Library/MobileDevice/Provisioning\ Profiles"
 
 alias be="bundle exec"
-alias ddd="rm -rf ~/Library/Developer/Xcode/DerivedData/*"
+alias ddd="rm -rf ~/Library/Developer/Xcode/DerivedData"
 alias dmpps="rm -r ~/Library/MobileDevice/Provisioning\ Profiles"
 
 alias gti="git"
