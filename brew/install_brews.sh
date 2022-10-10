@@ -5,7 +5,9 @@ set -e
 # Install Homebrew if it doesn't exist
 if ! which -s brew; then
     echo "Installing brew"
-    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    # Make sure we can continue using brew in this shell before we set up our PATH via dotfiles installation
+    eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # Install terminal-notifier if it doesn't exist
