@@ -39,3 +39,9 @@ if ! which -s gh; then
     echo "Installing gh"
     brew install gh
 fi
+
+# Install Xcodes if it doesn't exist
+if ! test -d /Applications/Xcodes.app; then
+    echo "Installing Xcodes"
+    brew install --cask xcodes
+fi
