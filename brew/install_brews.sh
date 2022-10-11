@@ -45,3 +45,9 @@ if ! test -d /Applications/Xcodes.app; then
     echo "Installing Xcodes"
     brew install --cask xcodes
 fi
+
+# Install DB Browser for SQLite if it doesn't exist
+if ! test -d /Applications/DB\ Browser\ for\ SQLite.app; then
+    echo "Installing DB Browser for SQLite"
+    brew install --cask db-browser-for-sqlite
+fi
