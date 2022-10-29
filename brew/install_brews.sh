@@ -7,7 +7,7 @@ echo "Inspecting brew + formulae…"
 # Install Homebrew if it doesn't exist
 if ! which -s brew >/dev/null; then
     echo "- Installing brew"
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     # Make sure we can continue using brew in this shell before we set up our PATH via dotfiles installation
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
@@ -36,12 +36,6 @@ if ! which -s rbenv >/dev/null; then
         echo "- Installing ruby-build"
         brew install ruby-build
     fi
-fi
-
-# Install bash-completion if it doesn't exist
-if [ ! -f "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]; then
-    echo "- Installing bash-completion"
-    brew install bash-completion
 fi
 
 # Install carthage if it doesn't exist

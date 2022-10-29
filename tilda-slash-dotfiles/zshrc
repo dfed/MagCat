@@ -1,4 +1,118 @@
-source $HOME/.shared_profile
+# Ensure our .ssh/id_rsa passphrase is unlocked in the keychain
+ssh-add -K > /dev/null 2>&1
+
+alias cp='cp -i'	# prompt before overwriting file
+alias mv='mv -i'	# same
+alias ls='ls -lagP'
+alias ll="ls -l"
+alias gtar="tar -czvf"
+alias gos="cd ~/source"
+alias gompp="cd ~/Library/MobileDevice/Provisioning\ Profiles"
+
+alias be="bundle exec"
+alias ddd="rm -rf ~/Library/Developer/Xcode/DerivedData"
+alias dmpps="rm -r ~/Library/MobileDevice/Provisioning\ Profiles"
+
+alias gti="git"
+
+alias gclean='git clean -dff'
+alias gcleanall='git clean -dfx'
+alias logg="git log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(bold blue)%h - %C(reset)%C(green)(%ar)%C(reset) - %s %C(dim)- %an%C(reset)%C(yellow)%d'"
+alias gpm='git rev-parse --verify --quiet main > /dev/null && git co main && git pull origin main || (git co master && git pull origin master)'
+
+export GEM_HOME=$HOME/.gem
+
+function gprune {
+  git fetch -p --force && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done
+}
+
+alias podpush='bundle exec pod trunk push --verbose'
+
+# requires `brew install terminal-notifier`
+function notify {
+  # Get the exit status of the last-run command.
+  local retVal=$?
+  local title="Succeeded"
+  # Capture the parameter list for later display.
+  local message=$@
+  if [ $# -ne 0 ]; then
+    # Execute the parameters.
+    eval $@
+  else
+    # Get the last line of history.
+    lastCommandIndex="$(($HISTCMD-1))"
+    message="$history[$lastCommandIndex]"
+  fi
+  if [ $retVal -ne 0 ]; then
+    title="Failed"
+  fi
+  # Notify the user that the command is done.
+  terminal-notifier -title "$title" -message "$message" -sound "default" -ignoreDnD
+}
+
+function grb {
+  command=$1
+  if [ $# -ne 2 ]; then
+    echo 'Incorrect number of arguments given'
+    command='help'
+  fi
+  current_branch=$(git rev-parse --abbrev-ref HEAD)
+  if [ $command = 'new' ]; then
+    new_branch=$2
+    git push --no-verify origin $current_branch\:refs/heads/$new_branch && \
+    git fetch origin $new_branch:$new_branch && \
+    git checkout $new_branch && \
+    git branch --set-upstream-to origin/$new_branch
+
+  elif [ $command = 'mv' ]; then
+    old_branch=$current_branch
+    new_branch=$2
+    git push --no-verify origin $old_branch\:refs/heads/$new_branch && \
+    git fetch origin $new_branch\:$new_branch && \
+    git checkout $new_branch && \
+    git branch --set-upstream-to origin/$new_branch && \
+    git branch -D $old_branch && \
+    git push --no-verify origin :refs/heads/$old_branch
+
+  elif [ $command = 'rm' ]; then
+    branch=$2
+    git push --no-verify origin :refs/heads/$branch && \
+    if [ $current_branch = $branch ]; then
+      if git rev-parse --verify --quiet main > /dev/null; then
+        git checkout main && \
+        git branch -D $branch
+      elif git rev-parse --verify --quiet master > /dev/null; then
+        git checkout master && \
+        git branch -D $branch
+      else
+        echo "Deleted current branch on origin. Change branches and then run 'git branch -D $branch'"
+      fi
+    else
+      git branch -D $branch
+    fi
+  else
+    echo "usage: grb <command> <branch_name>
+
+    new <branch_name>\tcreate a new branch named 'branch_name'
+    mv <branch_name>\trename current branch to 'branch_name'
+    rm <branch_name>\tdelete branch 'branch_name'"
+  fi
+}
+
+alias entitlements="codesign -vvvv -d --entitlements -"
+
+export GIT_GEMS_PS1_SHOWUNTRACKEDFILES=true
+
+[ -f $HOME/.git_author_email ] && source $HOME/.git_author_email
+
+PATH=/opt/homebrew/bin:$PATH
+
+# Set up Ruby / rbenv
+eval "$(rbenv init - zsh)"
+
+if which -s ruby >/dev/null && which -s gem >/dev/null; then
+  PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
+fi
 
 # Set up git autocomplete
 plugins=(… zsh-completions)
@@ -11,9 +125,6 @@ zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
-
-# Set up Ruby / rbenv
-eval "$(rbenv init - zsh)"
 
 # Source our config files.
 source $HOME/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/source/FancyPantsPS1/fancypants_ps1_zshprompt

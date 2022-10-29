@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 set -e
 
@@ -18,7 +18,7 @@ echo "Installing preferences…"
 for directory in `find $(git rev-parse --show-toplevel)/$PREFERENCES_DIR/ -type d` # For each directory in this directory
 do
     directory_name=$(basename "$directory");
-	if [ "$directory_name" == "$PREFERENCES_DIR" ]; then
+	if [[ "$directory_name" == "$PREFERENCES_DIR" ]]; then
 		# Skip the current directory
 		continue
 	fi

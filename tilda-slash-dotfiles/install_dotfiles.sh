@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/zsh
 
 set -e
 
@@ -9,33 +9,37 @@ echo "Inspecting dot files…"
 for file in $DOTFILES_DIR/* # For each file in $DOTFILES_DIR
 do    
     file_name=$(basename "$file")
-	if [ "$file_name" == "$(basename $0)" ]; then
+	if [[ "$file_name" == "$(basename $0)" ]]; then
 		# Skip the current script
 		continue
 	fi
     
     destination="$PWD/$DOTFILES_DIR/$file_name"
     source="$HOME/.$file_name"
-    if [ "$(readlink -- $source)" != $destination ]; then
+    if [[ "$(readlink -- $source)" != $destination ]]; then
         echo "- Linking $file_name"
         ln -sF $destination $source
     fi
 done
 
-if [ ! -f "$HOME/.bashrc" ]; then
-    echo "- Creating .bashrc"
-    # Make non-login shell use setup from `.bash_profile`
-    ln -sF $HOME/.bash_profile $HOME/.bashrc
+if [ -L $HOME/.shared_profile ] && [ ! -e $HOME/.shared_profile ]; then
+    echo "- Deleting old .shared_profile link"
+    rm $HOME/.shared_profile
 fi
 
-if [ ! -f "$HOME/.custom_bash_profile" ]; then
-    echo "- Creating custom_bash_profile"
-    touch $HOME/.custom_bash_profile
+if [ -L $HOME/.bash_profile ] && [ ! -e $HOME/.bash_profile ]; then
+    echo "- Deleting old .bash_profile link"
+    rm $HOME/.bash_profile
 fi
 
-if [ ! -f "$HOME/.custom_zshrc" ]; then
-    echo "- Creating custom_zshrc"
-    touch $HOME/.custom_zshrc
+if [ -L $HOME/.bashrc ] && [ ! -e $HOME/.bashrc ]; then
+    echo "- Deleting old .bashrc link"
+    rm $HOME/.bashrc
+fi
+
+if [ -f "$HOME/.custom_bash_profile" ]; then
+    echo "- Deleting old .custom_bash_profile"
+    rm $HOME/.custom_bash_profile
 fi
 
 # If our first argument has an '@' symbol in it, it's likely an email address
