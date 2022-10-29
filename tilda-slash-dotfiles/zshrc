@@ -12,5 +12,9 @@ zle -N down-line-or-beginning-search
 bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 
+# Set up Ruby / rbenv
+eval "$(rbenv init - zsh)"
+
+# Source our config files.
 source $HOME/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/source/FancyPantsPS1/fancypants_ps1_zshprompt
 source $HOME/.custom_zshrc

@@ -26,6 +26,18 @@ if [ -z "$(brew list --versions git)" ]; then
     brew install git
 fi
 
+# Install rbenv if it doesn't exist
+if ! which -s rbenv >/dev/null; then
+    echo "- Installing rbenv"
+    brew install rbenv
+
+    # Install ruby-build if it doesn't exist.
+    if ! which -s ruby-build >/dev/null; then
+        echo "- Installing ruby-build"
+        brew install ruby-build
+    fi
+fi
+
 # Install bash-completion if it doesn't exist
 if [ ! -f "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]; then
     echo "- Installing bash-completion"
