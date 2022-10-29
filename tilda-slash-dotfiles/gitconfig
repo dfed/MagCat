@@ -22,3 +22,5 @@
 	unstage = reset HEAD --
 [color]
 	ui = true
+[rebase]
+	updateRefs = true

@@ -16,8 +16,10 @@ if ! which -s terminal-notifier; then
     brew install terminal-notifier
 fi
 
-# Install git if it doesn't exist
-if ! which -s git; then
+# Install git if it hasn't been installed by brew.
+# We want at least version 2.38, which at the time of writing was current stable release.
+# We install with brew because its stable version is ahead of Xcode's.
+if [ -z "$(brew list --versions git)" ]; then
     echo "Installing git"
     brew install git
 fi
