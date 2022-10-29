@@ -38,7 +38,8 @@ if [ ! -f "$HOME/.custom_zshrc" ]; then
     touch $HOME/.custom_zshrc
 fi
 
-if [ ! -z $1 ]; then
+# If our first argument has an '@' symbol in it, it's likely an email address
+if [[ $1 == *@* ]]; then
     echo "- Writing git_author_email"
     touch $HOME/.git_author_email
     echo "export GIT_AUTHOR_EMAIL=$1; export GIT_COMMITTER_EMAIL=$1; export EMAIL=$1" > $HOME/.git_author_email

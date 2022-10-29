@@ -17,6 +17,7 @@ if ! gh auth status -h github.com >/dev/null 2>&1; then
     gh auth login
 fi
 
+clone_repo_into_destination dfed/MagCat $HOME/source/MagCat
 clone_repo_into_destination dfed/CacheAdvance $HOME/source/CacheAdvance
 clone_repo_into_destination dfed/FancyPantsPS1 $HOME/source/FancyPantsPS1
 clone_repo_into_destination dfed/Relativity $HOME/source/Relativity
