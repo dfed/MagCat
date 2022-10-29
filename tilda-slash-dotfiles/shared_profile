@@ -85,7 +85,7 @@ function grb {
         git checkout master && \
         git branch -D $branch
       else
-        echo "Deleted current branch. Change branches and then run 'git branch -D $branch'"
+        echo "Deleted current branch on origin. Change branches and then run 'git branch -D $branch'"
       fi
     else
       git branch -D $branch
