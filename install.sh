@@ -20,5 +20,6 @@ cd $HOME/source/MagCat
 ./tilda-slash-preferences/install_preferences.sh $@
 ./tilda-slash-dotfiles/install_dotfiles.sh $@
 
+echo
 echo "Installation complete. Run the following command to pick up changes:"
 echo "source $HOME/.zshrc"
