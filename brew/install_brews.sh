@@ -7,7 +7,7 @@ echo "Inspecting brew + formulae…"
 # Install Homebrew if it doesn't exist
 if ! which -s brew >/dev/null; then
     echo "- Installing brew"
-    /bin/zsh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     # Make sure we can continue using brew in this shell before we set up our PATH via dotfiles installation
     eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
