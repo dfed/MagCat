@@ -13,7 +13,7 @@ function set_plist_key_in_target_to_value {
 	/usr/libexec/PlistBuddy -c "Merge \"$VALUE\"" $TARGET
 }
 
-echo "Installing preferences"
+echo "Installing preferences…"
 
 for directory in `find $(git rev-parse --show-toplevel)/$PREFERENCES_DIR/ -type d` # For each directory in this directory
 do

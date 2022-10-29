@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/bin/zsh
 
 set -e
+
+echo "Cloning repos…"
 
 function clone_repo_into_destination {
     REPO=$1
