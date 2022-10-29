@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Installing gems…"
+echo "Inspecting gems…"
 
 # Install bundler if it doesn't exist
 if [ -z "$(gem list --no-versions | grep bundler)" ]; then

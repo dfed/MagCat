@@ -2,7 +2,7 @@
 
 set -e
 
-echo "Installing brew + formulae…"
+echo "Inspecting brew + formulae…"
 
 # Install Homebrew if it doesn't exist
 if ! which -s brew >/dev/null; then

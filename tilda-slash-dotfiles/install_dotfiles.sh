@@ -4,7 +4,7 @@ set -e
 
 DOTFILES_DIR="tilda-slash-dotfiles"
 
-echo "Installing dot files…"
+echo "Inspecting dot files…"
 
 for file in $DOTFILES_DIR/* # For each file in $DOTFILES_DIR
 do    
