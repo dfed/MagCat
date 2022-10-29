@@ -75,3 +75,6 @@ if ! test -d /Applications/DB\ Browser\ for\ SQLite.app; then
     echo "- Installing DB Browser for SQLite"
     brew install --cask db-browser-for-sqlite
 fi
+
+echo "- Upgrading brews"
+brew upgrade
