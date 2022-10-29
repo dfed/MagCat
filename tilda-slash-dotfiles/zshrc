@@ -105,15 +105,6 @@ export GIT_GEMS_PS1_SHOWUNTRACKEDFILES=true
 
 [ -f $HOME/.git_author_email ] && source $HOME/.git_author_email
 
-PATH=/opt/homebrew/bin:$PATH
-
-# Set up Ruby / rbenv
-eval "$(rbenv init - zsh)"
-
-if which -s ruby >/dev/null && which -s gem >/dev/null; then
-  PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
-fi
-
 # Set up git autocomplete
 plugins=(… zsh-completions)
 autoload -U compinit && compinit
@@ -127,5 +118,6 @@ bindkey "^[[A" up-line-or-beginning-search # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 
 # Source our config files.
+source $HOME/source/MagCat/path_setup
 source $HOME/source/FancyPantsPS1/fancypants_sharedrc && source $HOME/source/FancyPantsPS1/fancypants_ps1_zshprompt
 source $HOME/.custom_zshrc

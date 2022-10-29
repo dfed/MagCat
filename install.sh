@@ -8,6 +8,9 @@ if [ "$1" = '--local' ]; then
     PREFIX="file://$(git rev-parse --show-toplevel)"
 fi
 
+# Ensure our PATH is set up
+source <(curl -Ls $PREFIX/path_setup)
+
 # Install our common tools, including git
 zsh <(curl -Ls $PREFIX/brew/install_brews.sh) $@
 zsh <(curl -Ls $PREFIX/gem/install_gems.sh) $@

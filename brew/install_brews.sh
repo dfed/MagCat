@@ -4,11 +4,6 @@ set -e
 
 echo "Inspecting brew + formulae…"
 
-# Make sure brew can be found before we look for it:
-if [[ $PATH != *'/opt/homebrew/bin'* ]]; then
-    PATH=/opt/homebrew/bin:$PATH
-fi
-
 # Install Homebrew if it doesn't exist
 if ! which -s brew >/dev/null; then
     echo "- Installing brew"

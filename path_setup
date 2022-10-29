@@ -1,0 +1,8 @@
+PATH=/opt/homebrew/bin:$PATH
+
+# Set up Ruby / rbenv
+eval "$(rbenv init - zsh)"
+
+if which -s ruby >/dev/null && which -s gem >/dev/null; then
+  PATH="$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin"
+fi
