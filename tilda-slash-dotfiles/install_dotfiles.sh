@@ -46,9 +46,3 @@ if [[ $1 == *@* ]]; then
 else
     echo "- Skipping git_author_email: no email address provided"
 fi
-
-if [[ ! $(rbenv versions --bare) =~ 3.1.2 ]]; then
-    echo "- Installing ruby 3.1.2"
-    rbenv install 3.1.2
-    rbenv global 3.1.2
-fi
