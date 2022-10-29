@@ -56,10 +56,18 @@ if ! which -s gh >/dev/null; then
     brew install gh
 fi
 
-# Install Xcodes if it doesn't exist
+# Install XcodesApp if it doesn't exist
 if ! test -d /Applications/Xcodes.app; then
-    echo "- Installing Xcodes"
+    echo "- Installing XcodesApp"
     brew install --cask xcodes
+fi
+
+# Install Xcodes if it doesn't exist
+if ! which -s gh >/dev/null; then
+    echo "- Installing xcodes"
+    brew install robotsandpencils/made/xcodes
+    # Explicitly link since installing XcodesApp first can cause that step to be skipped.
+    brew link xcodes
 fi
 
 # Install DB Browser for SQLite if it doesn't exist

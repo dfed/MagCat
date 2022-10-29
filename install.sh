@@ -29,6 +29,17 @@ if [[ ! $(rbenv versions --bare) =~ 3.1.2 ]]; then
     rbenv global 3.1.2
 fi
 
+# Install command line developer tools if they aren't present
+if ! which -s make >/dev/null; then
+    echo "- Installing command line developer tools"
+    xcode-select --install
+fi
+
+if [ -z "$(xcodes installed)" ]; then
+    echo "- Installing latest Xcode"
+    xcodes install --latest
+fi
+
 echo
 echo "Installation complete. Run the following command to pick up changes:"
 echo "source $HOME/.zshrc"
