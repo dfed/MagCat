@@ -16,6 +16,14 @@ zsh <(curl -Ls $PREFIX/gem/install_gems.sh) $@
 zsh <(curl -Ls $PREFIX/repos/clone.sh) $@
 # Now that we have our repo, we can cd into it.
 cd $HOME/source/MagCat
+# Make sure we're on the latest version.
+git fetch --quiet
+CURRENT_SHA=$(git rev-list HEAD | head -1)
+REMOTE_SHA=$(git rev-list origin/main | head -1)
+if [ $CURRENT_SHA != $REMOTE_SHA ]; then
+    >&2 echo '- Stopping install: current HEAD not the same as origin/main.'
+    exit 1
+fi
 
 ./tilda-slash-preferences/install_preferences.sh $@
 ./tilda-slash-dotfiles/install_dotfiles.sh $@
