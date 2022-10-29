@@ -57,7 +57,7 @@ if ! test -d /Applications/Xcodes.app; then
 fi
 
 # Install Xcodes if it doesn't exist
-if ! which -s gh >/dev/null; then
+if ! which -s xcodes >/dev/null; then
     echo "- Installing xcodes"
     brew install robotsandpencils/made/xcodes
     # Explicitly link since installing XcodesApp first can cause that step to be skipped.
