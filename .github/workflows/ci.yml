@@ -13,5 +13,7 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+      - name: Prepare script
+        run: mkdir -p $HOME/source/MagCat && cp -R . $HOME/source/MagCat
       - name: Run install script
         run: zsh <(curl -Ls https://raw.githubusercontent.com/dfed/MagCat/main/install.sh) --no-ui
