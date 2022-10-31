@@ -3,7 +3,7 @@
 set -e
 
 PREFIX=https://raw.githubusercontent.com/dfed/MagCat/main
-if [ "$1" = '--local' ] || [ "$1" = '--ci' ]; then
+if [ "$1" = '--local' ]; then
     echo "Using local clone"
     PREFIX="file://$(git rev-parse --show-toplevel)"
 fi
