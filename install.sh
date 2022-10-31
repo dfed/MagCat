@@ -3,7 +3,7 @@
 set -e
 
 PREFIX=https://raw.githubusercontent.com/dfed/MagCat/main
-if [ "$1" = '--local' ]; then
+if [ "$1" = '--local' ] || [ "$1" = '--ci' ]; then
     echo "Using local clone"
     PREFIX="file://$(git rev-parse --show-toplevel)"
 fi
@@ -31,15 +31,18 @@ fi
 ./tilda-slash-preferences/install_preferences.sh $@
 ./tilda-slash-dotfiles/install_dotfiles.sh $@
 
-# Install command line developer tools if they aren't present
-if ! which -s make >/dev/null; then
-    echo "- Installing command line developer tools"
-    xcode-select --install
-fi
+# Skip Xcode installs in CI.
+if [ "$1" != '--ci' ]; then
+    # Install command line developer tools if they aren't present
+    if ! which -s make >/dev/null; then
+        echo "- Installing command line developer tools"
+        xcode-select --install
+    fi
 
-if [ -z "$(xcodes installed)" ]; then
-    echo "- Installing latest Xcode"
-    xcodes install --latest
+    if [ -z "$(xcodes installed)" ]; then
+        echo "- Installing latest Xcode"
+        xcodes install --latest
+    fi
 fi
 
 echo
