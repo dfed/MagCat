@@ -14,16 +14,19 @@ function clone_repo_into_destination {
     fi
 }
 
-if ! gh auth status -h github.com >/dev/null 2>&1; then
-    echo "You must create a github auth session before cloning"
-    gh auth login
-fi
+# Skip github authentication and cloning if there's no UI allowed.
+if [ "$1" != '--no-ui' ]; then
+    if ! gh auth status -h github.com >/dev/null 2>&1; then
+        echo "You must create a github auth session before cloning"
+        gh auth login
+    fi
 
-clone_repo_into_destination dfed/MagCat
-clone_repo_into_destination dfed/CacheAdvance
-clone_repo_into_destination dfed/FancyPantsPS1
-clone_repo_into_destination dfed/Relativity
-clone_repo_into_destination dfed/XCTest-watchOS $HOM
-clone_repo_into_destination fdiaz/SwiftInspector
-clone_repo_into_destination square/Aardvark
-clone_repo_into_destination square/Valet
+    clone_repo_into_destination dfed/MagCat
+    clone_repo_into_destination dfed/CacheAdvance
+    clone_repo_into_destination dfed/FancyPantsPS1
+    clone_repo_into_destination dfed/Relativity
+    clone_repo_into_destination dfed/XCTest-watchOS $HOM
+    clone_repo_into_destination fdiaz/SwiftInspector
+    clone_repo_into_destination square/Aardvark
+    clone_repo_into_destination square/Valet
+fi

@@ -31,8 +31,8 @@ fi
 ./tilda-slash-preferences/install_preferences.sh $@
 ./tilda-slash-dotfiles/install_dotfiles.sh $@
 
-# Skip Xcode installs in CI.
-if [ "$1" != '--ci' ]; then
+# Skip Xcode installs if there's no UI allowed.
+if [ "$1" != '--no-ui' ]; then
     # Install command line developer tools if they aren't present
     if ! which -s make >/dev/null; then
         echo "- Installing command line developer tools"
