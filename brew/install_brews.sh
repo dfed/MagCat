@@ -36,6 +36,9 @@ if ! which -s rbenv >/dev/null; then
         echo "- Installing ruby-build"
         brew install ruby-build
     fi
+
+    # Now that we have rbenv, initialize it so we can find it later.
+    eval "$(rbenv init - zsh)"
 fi
 
 # Install carthage if it doesn't exist

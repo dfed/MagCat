@@ -11,7 +11,6 @@ echo "Inspecting gems…"
 if [[ ! $(rbenv versions --bare) =~ 3.1.2 ]]; then
     echo "Installing ruby 3.1.2"
     rbenv install 3.1.2
-    eval "$(rbenv init - zsh)"
     rbenv global 3.1.2
 fi
 
