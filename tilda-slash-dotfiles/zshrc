@@ -20,8 +20,6 @@ alias gcleanall='git clean -dfx'
 alias logg="git log --graph --decorate --abbrev-commit --date=relative --pretty=format:'%C(bold blue)%h - %C(reset)%C(green)(%ar)%C(reset) - %s %C(dim)- %an%C(reset)%C(yellow)%d'"
 alias gpm='git rev-parse --verify --quiet main > /dev/null && git co main && git pull origin main || (git co master && git pull origin master)'
 
-export GEM_HOME=$HOME/.gem
-
 function gprune {
   git fetch -p --force && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done
 }

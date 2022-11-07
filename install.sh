@@ -13,7 +13,7 @@ source <(curl -Ls $PREFIX/path_setup)
 
 # Install our common tools, including git
 zsh <(curl -Ls $PREFIX/brew/install_brews.sh) $@
-zsh <(curl -Ls $PREFIX/gem/install_gems.sh) $@
+zsh <(curl -Ls $PREFIX/ruby/install_ruby.sh) $@
 
 # Now that we have git, we can clone our repos
 zsh <(curl -Ls $PREFIX/repos/clone.sh) $@
