@@ -1,6 +1,6 @@
 PATH=/opt/homebrew/bin:$PATH
 
-if ! which -s rbenv >/dev/null; then
+if which -s rbenv >/dev/null; then
   # Set up Ruby / rbenv
   eval "$(rbenv init - zsh)"
 fi
