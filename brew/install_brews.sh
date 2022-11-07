@@ -26,6 +26,13 @@ if [ -z "$(brew list --versions git)" ]; then
     brew install git
 fi
 
+# Install git-lfs if it hasn't been installed via brew.
+# This is a useful tool, and since we're installing `git` manually we should also intall git-lfs manually.
+if [ -z "$(brew list --versions git-lfs)" ]; then
+    echo "- Installing git-lfs"
+    brew install git-lfs
+fi
+
 # Install rbenv if it doesn't exist
 if ! which -s rbenv >/dev/null; then
     echo "- Installing rbenv"
