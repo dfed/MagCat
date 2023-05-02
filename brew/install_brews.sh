@@ -36,7 +36,7 @@ fi
 # Install gpg if it doesn't exist
 if ! which -s gpg >/dev/null; then
     echo "- Installing gpg"
-    brew install gnupg
+    brew install gpg-suite-no-mail
 fi
 
 # Install rbenv if it doesn't exist
