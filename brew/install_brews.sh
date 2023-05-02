@@ -33,6 +33,12 @@ if [ -z "$(brew list --versions git-lfs)" ]; then
     brew install git-lfs
 fi
 
+# Install gpg if it doesn't exist
+if ! which -s gpg >/dev/null; then
+    echo "- Installing gpg"
+    brew install gnupg
+fi
+
 # Install rbenv if it doesn't exist
 if ! which -s rbenv >/dev/null; then
     echo "- Installing rbenv"
