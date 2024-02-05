@@ -1,4 +1,7 @@
 PATH=/opt/homebrew/bin:$PATH
+if [[ -d "/Applications/Sublime Text.app/Contents/SharedSupport/bin" ]]; then
+  PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
+fi
 
 if which -s rbenv >/dev/null; then
   # Set up Ruby / rbenv
