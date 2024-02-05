@@ -9,11 +9,8 @@ on:
 jobs:
   install:
     name: Install
-    runs-on: macOS-14
+    runs-on: macOS-13
     steps:
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.2.3'
       - name: Checkout Repo
         uses: actions/checkout@v4
       - name: Prepare script
