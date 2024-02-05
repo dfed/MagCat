@@ -60,6 +60,12 @@ if ! which -s carthage >/dev/null; then
     brew install carthage
 fi
 
+# Install aria2 if it doesn't exist
+if ! brew list --quiet aria2 >/dev/null; then
+    echo " - Installing aria2"
+    brew install aria2
+fi
+
 # Install gh if it doesn't exist
 if ! which -s gh >/dev/null; then
     echo "- Installing gh"
