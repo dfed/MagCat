@@ -12,7 +12,7 @@ jobs:
     runs-on: macOS-14
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Prepare script
         run: mkdir -p $HOME/source/MagCat && cp -R . $HOME/source/MagCat
       - name: Run install script
