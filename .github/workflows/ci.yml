@@ -9,7 +9,7 @@ on:
 jobs:
   install:
     name: Install
-    runs-on: macOS-12
+    runs-on: macOS-14
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
