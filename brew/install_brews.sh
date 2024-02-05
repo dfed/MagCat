@@ -86,6 +86,12 @@ if ! which -s xcodes >/dev/null; then
     brew link xcodes
 fi
 
+# Install macdown if it doesn't exist
+if ! brew list --quiet macdown; then
+    echo " - Installing macdown"
+    brew install --cask macdown
+fi
+
 # Install DB Browser for SQLite if it doesn't exist
 if ! test -d /Applications/DB\ Browser\ for\ SQLite.app; then
     echo "- Installing DB Browser for SQLite"
