@@ -61,7 +61,7 @@ if ! which -s carthage >/dev/null; then
 fi
 
 # Install aria2 if it doesn't exist
-if ! brew list --quiet aria2; then
+if ! brew list --quiet aria2 >/dev/null; then
     echo " - Installing aria2"
     brew install aria2
 fi
@@ -87,7 +87,7 @@ if ! which -s xcodes >/dev/null; then
 fi
 
 # Install macdown if it doesn't exist
-if ! brew list --quiet macdown; then
+if ! brew list --quiet macdown >/dev/null; then
     echo " - Installing macdown"
     brew install --cask macdown
 fi
