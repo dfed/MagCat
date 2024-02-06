@@ -4,13 +4,6 @@ set -e
 
 echo "Inspecting Ruby…"
 
-echo "hi"
-brew info libyaml
-brew info readline
-brew info openssl@3
-brew info gmp
-brew info rust
-
 # Install Ruby 3.3.0 if it isn't already installed.
 # This version of ruby works well with ARM-based Mac machines.
 # 3.3.0 was the latest stable at the time of writing.
