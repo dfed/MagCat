@@ -4,6 +4,8 @@ set -e
 
 echo "Inspecting Ruby…"
 
+rbenv install --list-all
+
 # Install Ruby 3.2.3 if it isn't already installed.
 # This version of ruby works well with ARM-based Mac machines.
 # 3.2.3 was the latest stable at the time of writing.
