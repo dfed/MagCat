@@ -22,6 +22,8 @@ if [ "$1" != '--no-ui' ]; then
     fi
 
     clone_repo_into_destination dfed/MagCat
+    clone_repo_into_destination dfed/SafeDI
+    clone_repo_into_destination dfed/swift-async-queue
     clone_repo_into_destination dfed/CacheAdvance
     clone_repo_into_destination dfed/FancyPantsPS1
     clone_repo_into_destination dfed/Relativity
