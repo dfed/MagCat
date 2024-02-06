@@ -34,7 +34,7 @@ if ! brew list git-lfs >/dev/null; then
 fi
 
 # Install gpg if it doesn't exist
-if ! brew list gpg >/dev/null; then
+if ! brew list gpg-suite-no-mail >/dev/null; then
     echo "- Installing gpg"
     brew install gpg-suite-no-mail
 fi
