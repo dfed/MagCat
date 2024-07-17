@@ -52,38 +52,42 @@ function notify {
 }
 
 function grb {
+  set -o err_return
+
   command=$1
-  if [ $# -ne 2 ]; then
+  if [ $# -lt 2 ]; then
     echo 'Incorrect number of arguments given'
     command='help'
   fi
   current_branch=$(git rev-parse --abbrev-ref HEAD)
   if [ $command = 'new' ]; then
     new_branch=$2
-    git push --no-verify origin $current_branch\:refs/heads/$new_branch && \
-    git fetch origin $new_branch:$new_branch && \
-    git checkout $new_branch && \
+    git checkout -b $new_branch
+    if [ $# -gt 2 ]; then
+      git cherry-pick ${@:3}
+    fi
+    git push --no-verify origin $new_branch\:refs/heads/$new_branch
     git branch --set-upstream-to origin/$new_branch
 
   elif [ $command = 'mv' ]; then
     old_branch=$current_branch
     new_branch=$2
-    git push --no-verify origin $old_branch\:refs/heads/$new_branch && \
-    git fetch origin $new_branch\:$new_branch && \
-    git checkout $new_branch && \
-    git branch --set-upstream-to origin/$new_branch && \
-    git branch -D $old_branch && \
+    git push --no-verify origin $old_branch\:refs/heads/$new_branch
+    git fetch origin $new_branch\:$new_branch
+    git checkout $new_branch
+    git branch --set-upstream-to origin/$new_branch
+    git branch -D $old_branch
     git push --no-verify origin :refs/heads/$old_branch
 
   elif [ $command = 'rm' ]; then
     branch=$2
-    git push --no-verify origin :refs/heads/$branch && \
+    git push --no-verify origin :refs/heads/$branch
     if [ $current_branch = $branch ]; then
       if git rev-parse --verify --quiet main > /dev/null; then
-        git checkout main && \
+        git checkout main
         git branch -D $branch
       elif git rev-parse --verify --quiet master > /dev/null; then
-        git checkout master && \
+        git checkout master
         git branch -D $branch
       else
         echo "Deleted current branch on origin. Change branches and then run 'git branch -D $branch'"
@@ -94,9 +98,10 @@ function grb {
   else
     echo "usage: grb <command> <branch_name>
 
-    new <branch_name>\tcreate a new branch named 'branch_name'
-    mv <branch_name>\trename current branch to 'branch_name'
-    rm <branch_name>\tdelete branch 'branch_name'"
+    new <branch_name>\t\tcreate a new branch named 'branch_name'
+    new <branch_name> <sha1>\tcreate a new branch named 'branch_name' and cherry pick shas onto that branch before pushing.
+    mv <branch_name>\t\trename current branch to 'branch_name'
+    rm <branch_name>\t\tdelete branch 'branch_name'"
   fi
 }
 
