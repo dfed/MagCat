@@ -52,6 +52,7 @@ function notify {
 }
 
 function grb {
+  # Use a subshell to avoid `set -o err_return` infecting the calling shell.
   (
     set -o err_return
 
