@@ -68,7 +68,7 @@ function grb {
       if [ $# -gt 2 ]; then
         git cherry-pick ${@:3}
       fi
-      git push --no-verify --set-upstream-to origin $new_branch\:refs/heads/$new_branch
+      git push --no-verify --set-upstream origin $new_branch\:refs/heads/$new_branch
 
     elif [ $command = 'mv' ]; then
       old_branch=$current_branch
