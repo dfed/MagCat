@@ -6,7 +6,6 @@ set nocompatible        " Use Vim defaults (much better!)
 set bs=2                " allow backspacing over everything in insert mode (also would work as backspace=indent,eol,start)
 set cin					" c indenting
 set shiftwidth=4		" indent size to 4
-set expandtab
 set tabstop=4			" messes up UNIX default formatting of 8 spaces
 highlight Normal guibg=Black guifg=White
 set nu					" set numbering

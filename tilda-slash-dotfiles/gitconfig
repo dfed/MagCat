@@ -3,6 +3,7 @@
 [core]
 	excludesfile = ~/.gitignore_global
 	ignorecase = false
+	pager = less -x1,5
 [pull]
 	rebase = true
 [difftool "sourcetree"]
