@@ -6,6 +6,8 @@
 	pager = less -x1,5
 [pull]
 	rebase = true
+[push]
+	autoSetupRemote = true
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
