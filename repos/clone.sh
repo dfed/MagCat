@@ -24,11 +24,8 @@ if [ "$1" != '--no-ui' ]; then
     clone_repo_into_destination dfed/MagCat
     clone_repo_into_destination dfed/SafeDI
     clone_repo_into_destination dfed/swift-async-queue
+    clone_repo_into_destination dfed/swift-testing-expectation
     clone_repo_into_destination dfed/CacheAdvance
     clone_repo_into_destination dfed/FancyPantsPS1
-    clone_repo_into_destination dfed/Relativity
-    clone_repo_into_destination dfed/XCTest-watchOS $HOM
-    clone_repo_into_destination fdiaz/SwiftInspector
-    clone_repo_into_destination square/Aardvark
     clone_repo_into_destination square/Valet
 fi
