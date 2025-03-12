@@ -75,7 +75,7 @@ fi
 # Install XcodesApp if it doesn't exist
 if ! brew list --cask xcodes >/dev/null; then
     echo "- Installing XcodesApp"
-    brew install --cask xcodes
+    brew install --cask xcodes --force
 fi
 
 # Install Xcodes if it doesn't exist

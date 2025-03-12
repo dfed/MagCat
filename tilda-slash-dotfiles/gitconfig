@@ -1,5 +1,6 @@
 [user]
 	name = Dan Federman
+	signingkey = 2ADD8D5445E8B7EF
 [core]
 	excludesfile = ~/.gitignore_global
 	ignorecase = false
