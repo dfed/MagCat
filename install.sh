@@ -4,8 +4,8 @@ set -e
 
 PREFIX=https://raw.githubusercontent.com/dfed/MagCat/main
 if [ "$1" = '--local' ]; then
-    echo "Using local clone"
-    PREFIX="file://$(git rev-parse --show-toplevel)"
+	echo "Using local clone"
+	PREFIX="file://$(git rev-parse --show-toplevel)"
 fi
 
 # Ensure our PATH is set up
@@ -20,16 +20,16 @@ zsh <(curl -Ls $PREFIX/repos/clone.sh) $@
 # Now that we have our repo, we can cd into it.
 cd $HOME/source/MagCat
 if [[ "$GITHUB_ACTIONS" == "true" ]]; then
-    # We're running in a GitHub Action!
+	# We're running in a GitHub Action!
 else
-    # Make sure we're on the latest version.
-    git fetch --quiet
-    CURRENT_SHA=$(git rev-list HEAD | head -1)
-    REMOTE_SHA=$(git rev-list origin/main | head -1)
-    if [ $CURRENT_SHA != $REMOTE_SHA ]; then
-        >&2 echo '- Stopping install: current HEAD not the same as origin/main.'
-        exit 1
-    fi
+	# Make sure we're on the latest version.
+	git fetch --quiet
+	CURRENT_SHA=$(git rev-list HEAD | head -1)
+	REMOTE_SHA=$(git rev-list origin/main | head -1)
+	if [ $CURRENT_SHA != $REMOTE_SHA ]; then
+		>&2 echo '- Stopping install: current HEAD not the same as origin/main.'
+		exit 1
+	fi
 fi
 
 ./tilda-slash-preferences/install_preferences.sh $@
@@ -37,16 +37,16 @@ fi
 
 # Skip Xcode installs if there's no UI allowed.
 if [ "$1" != '--no-ui' ]; then
-    # Install command line developer tools if they aren't present
-    if ! which -s make >/dev/null; then
-        echo "- Installing command line developer tools"
-        xcode-select --install
-    fi
+	# Install command line developer tools if they aren't present
+	if ! which -s make >/dev/null; then
+		echo "- Installing command line developer tools"
+		xcode-select --install
+	fi
 
-    if [ -z "$(xcodes installed)" ]; then
-        echo "- Installing latest Xcode"
-        xcodes install --latest
-    fi
+	if [ -z "$(xcodes installed)" ]; then
+		echo "- Installing latest Xcode"
+		xcodes install --latest
+	fi
 fi
 
 echo
