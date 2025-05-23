@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Menu Key Bindings</key>
+	<dict>
+		<key>Key Bindings</key>
+		<array>
+			<dict>
+				<key>Action</key>
+				<string>GPUDebugger_selectNextItem:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandGroupID</key>
+				<string>GPUDebugger.CmdDefinition.GPUCounters.SelectNextItem</string>
+				<key>CommandID</key>
+				<string>GPUDebugger.CmdDefinition.GPUCounters.SelectNextItem</string>
+				<key>Group</key>
+				<string>Editor Menu for GPU Counters</string>
+				<key>GroupID</key>
+				<string>GPUDebugger.GPUCounters.EditorMenuDefinition</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Title</key>
+				<string>Select Next Draw/Encoder</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>GPUDebugger_selectPrevItem:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandGroupID</key>
+				<string>GPUDebugger.CmdDefinition.GPUCounters.SelectPrevItem</string>
+				<key>CommandID</key>
+				<string>GPUDebugger.CmdDefinition.GPUCounters.SelectPrevItem</string>
+				<key>Group</key>
+				<string>Editor Menu for GPU Counters</string>
+				<key>GroupID</key>
+				<string>GPUDebugger.GPUCounters.EditorMenuDefinition</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Title</key>
+				<string>Select Prev Draw/Encoder</string>
+			</dict>
+		</array>
+		<key>Version</key>
+		<integer>3</integer>
+	</dict>
+	<key>Text Key Bindings</key>
+	<dict>
+		<key>Key Bindings</key>
+		<dict>
+			<key>^~$</key>
+			<string>moveSubWordBackwardAndModifySelection:</string>
+			<key>^~$</key>
+			<string>moveSubWordForwardAndModifySelection:</string>
+			<key>^~</key>
+			<string>moveSubWordBackward:</string>
+			<key>^~</key>
+			<string>moveSubWordForward:</string>
+		</dict>
+		<key>Version</key>
+		<integer>3</integer>
+	</dict>
+</dict>
+</plist>

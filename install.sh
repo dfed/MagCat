@@ -23,6 +23,8 @@ cd $HOME/source/MagCat
 ./tilda-slash-preferences/install_preferences.sh $@
 ./tilda-slash-dotfiles/install_dotfiles.sh $@
 
+ln -sF $HOME/source/MagCat/xcode/Default.idekeybindings ~/Library/Developer/Xcode/UserData/KeyBindings/Default.idekeybindings
+
 # Skip Xcode installs if there's no UI allowed.
 if [ "$1" != '--no-ui' ]; then
 	# Install command line developer tools if they aren't present
