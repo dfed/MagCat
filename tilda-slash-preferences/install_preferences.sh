@@ -9,6 +9,10 @@ function set_plist_key_in_target_to_value {
 	VALUE="$(git rev-parse --show-toplevel)/$PREFERENCES_DIR/$2"
 	PLIST_KEY="$(basename "$VALUE" | cut -f 1 -d '.')" # Get the name of the plist key from the file name
 
+	if [ ! -f "$TARGET" ]; then
+		/usr/libexec/PlistBuddy -c "Save" "$TARGET"
+	fi
+
 	/usr/libexec/PlistBuddy -c "Delete :\"$PLIST_KEY\"" $TARGET
 	/usr/libexec/PlistBuddy -c "Merge \"$VALUE\"" $TARGET
 }
