@@ -35,7 +35,5 @@
 	defaultBranch = main
 [advice]
 	skippedCherryPicks = false
-[blame]
-	ignoreRevsFile = .git-blame-ignore-revs
 [include]
     path = ~/.gitconfig-signing
