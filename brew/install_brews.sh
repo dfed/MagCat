@@ -72,6 +72,12 @@ if ! brew list gh >/dev/null; then
 	brew install gh
 fi
 
+# Install shfmt if it doesn't exist
+if ! brew list shfmt >/dev/null; then
+	echo "- Installing shfmt"
+	brew install shfmt
+fi
+
 # Install XcodesApp if it doesn't exist
 if ! brew list --cask xcodes >/dev/null; then
 	echo "- Installing XcodesApp"
