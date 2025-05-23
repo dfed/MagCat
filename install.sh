@@ -2,7 +2,7 @@
 
 set -e
 
-PREFIX=https://raw.githubusercontent.com/dfed/MagCat/main
+PREFIX="https://raw.githubusercontent.com/dfed/MagCat/${GITHUB_SHA:-main}"
 if [ "$1" = '--local' ]; then
 	echo "Using local clone"
 	PREFIX="file://$(git rev-parse --show-toplevel)"
