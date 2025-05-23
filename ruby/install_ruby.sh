@@ -9,7 +9,7 @@ echo "Inspecting Ruby…"
 # 3.3.5 was the latest stable at the time of writing.
 # We need Ruby before we install our Gems.
 if [[ ! $(rbenv versions --bare) =~ 3.3.5 ]]; then
-    echo "Installing ruby 3.3.5"
-    rbenv install 3.3.5
-    rbenv global 3.3.5
+	echo "Installing ruby 3.3.5"
+	rbenv install 3.3.5
+	rbenv global 3.3.5
 fi
