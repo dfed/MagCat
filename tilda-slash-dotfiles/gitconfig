@@ -16,7 +16,6 @@
 	outgoing = log @{u}..
 	co = checkout
 	ci = commit
-	cino = commit --no-verify --no-edit
 	st = status
 	mm = merge --no-edit origin/HEAD
 	unstage = reset HEAD --
