@@ -19,6 +19,7 @@
 	st = status
 	mm = merge --no-edit origin/HEAD
 	unstage = reset HEAD --
+	p = "!zsh -c 'git push --no-verify \"$@\" || git push \"$@\"' -"
 [color]
 	ui = true
 [rebase]
