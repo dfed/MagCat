@@ -5,7 +5,7 @@ set -e
 pushd "$(git rev-parse --show-toplevel)"
 
 if [[ -z $(git status --porcelain) ]]; then
-	shfmt -w $(git ls-files '*.sh')
+	git ls-files -z '*.sh' | xargs -0 shfmt -w
 else
 	git status --porcelain
 	echo "Exiting - repo not clean"

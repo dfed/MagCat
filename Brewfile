@@ -1,6 +1,8 @@
 # Homebrew dependencies for MagCat
 # brew bundle installs missing packages and upgrades outdated ones automatically
 
+tap "xcodesorg/made"
+
 brew "git"
 brew "git-lfs"
 brew "gh"
