@@ -5,12 +5,12 @@ set -e
 echo "Inspecting repos…"
 
 function clone_repo_into_destination {
-	REPO=$1
-	DESTINATION=$HOME/source/$(basename $REPO)
+	REPO="$1"
+	DESTINATION="$HOME/source/$(basename "$REPO")"
 
 	if [ ! -d "$DESTINATION" ]; then
 		echo "- Cloning $REPO"
-		gh repo clone $REPO $DESTINATION
+		gh repo clone "$REPO" "$DESTINATION"
 	fi
 }
 

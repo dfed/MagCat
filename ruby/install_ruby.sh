@@ -8,6 +8,6 @@ echo "Inspecting Ruby…"
 # We need Ruby before we install our Gems.
 if ! rbenv versions --bare | grep -q -x "$1"; then
 	echo "Installing ruby $1"
-	rbenv install $1 || (brew upgrade ruby-build && rbenv install $1)
-	rbenv global $1
+	rbenv install "$1" || (brew upgrade ruby-build && rbenv install "$1")
+	rbenv global "$1"
 fi
