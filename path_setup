@@ -1,5 +1,5 @@
-PATH=/opt/homebrew/bin:$PATH
-PATH=/opt/homebrew/sbin:$PATH
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
 if [[ -d "/Applications/Sublime Text.app/Contents/SharedSupport/bin" ]]; then
   PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
 fi
