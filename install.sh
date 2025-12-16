@@ -26,6 +26,12 @@ cd $HOME/source/MagCat
 mkdir -p $HOME/Library/Developer/Xcode/UserData/KeyBindings/
 ln -sF $HOME/source/MagCat/xcode/Default.idekeybindings $HOME/Library/Developer/Xcode/UserData/KeyBindings/Default.idekeybindings
 
+# Initialize git-lfs if not already configured
+if ! git lfs env >/dev/null 2>&1 || ! git config --get-regex 'filter\.lfs' >/dev/null 2>&1; then
+	echo "- Initializing git-lfs"
+	git lfs install
+fi
+
 # Skip Xcode installs if there's no UI allowed.
 if [ "$1" != '--no-ui' ]; then
 	# Install command line developer tools if they aren't present
