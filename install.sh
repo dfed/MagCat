@@ -35,7 +35,7 @@ fi
 # Skip Xcode installs if there's no UI allowed.
 if [ "$1" != '--no-ui' ]; then
 	# Install command line developer tools if they aren't present
-	if ! which -s make >/dev/null; then
+	if ! command -v make >/dev/null; then
 		echo "- Installing command line developer tools"
 		xcode-select --install
 	fi
