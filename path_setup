@@ -1,4 +1,10 @@
-eval "$(/opt/homebrew/bin/brew shellenv)"
+if [[ -x /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+else
+  # Fallback for fresh installs before brew exists
+  PATH=/opt/homebrew/bin:$PATH
+  PATH=/opt/homebrew/sbin:$PATH
+fi
 
 if [[ -d "/Applications/Sublime Text.app/Contents/SharedSupport/bin" ]]; then
   PATH="/Applications/Sublime Text.app/Contents/SharedSupport/bin:$PATH"
