@@ -11,9 +11,12 @@ brew "ruby-build"
 brew "carthage"
 brew "shfmt"
 brew "terminal-notifier"
+brew "gemini-cli"
 
 # Casks
 cask "xcodes-app"
 cask "gpg-suite-no-mail"
 cask "macdown"
 cask "db-browser-for-sqlite"
+cask "claude-code"
+cask "codex"
