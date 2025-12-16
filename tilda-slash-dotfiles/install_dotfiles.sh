@@ -21,26 +21,6 @@ for file in $DOTFILES_DIR/*; do # For each file in $DOTFILES_DIR
 	fi
 done
 
-if [ -L $HOME/.shared_profile ] && [ ! -e $HOME/.shared_profile ]; then
-	echo "- Deleting old .shared_profile link"
-	rm $HOME/.shared_profile
-fi
-
-if [ -L $HOME/.bash_profile ] && [ ! -e $HOME/.bash_profile ]; then
-	echo "- Deleting old .bash_profile link"
-	rm $HOME/.bash_profile
-fi
-
-if [ -L $HOME/.bashrc ] && [ ! -e $HOME/.bashrc ]; then
-	echo "- Deleting old .bashrc link"
-	rm $HOME/.bashrc
-fi
-
-if [ -f "$HOME/.custom_bash_profile" ]; then
-	echo "- Deleting old .custom_bash_profile"
-	rm $HOME/.custom_bash_profile
-fi
-
 # If our first argument has an '@' symbol in it, it's likely an email address
 if [[ $1 == *@* ]]; then
 	echo "- Writing git_author_email"
