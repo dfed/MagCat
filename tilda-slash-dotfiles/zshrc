@@ -1,6 +1,8 @@
 # Ensure our .ssh/id_rsa passphrase is unlocked in the keychain
 ssh-add --apple-load-keychain > /dev/null 2>&1
 
+PATH="$HOME/.local/bin:$PATH"
+
 alias cp='cp -i'	# prompt before overwriting file
 alias mv='mv -i'	# same
 alias ls='ls -lagP'
