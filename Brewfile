@@ -1,12 +1,10 @@
 # Homebrew dependencies for MagCat
 # brew bundle installs missing packages and upgrades outdated ones automatically
 
-tap "xcodesorg/made"
-
 brew "git"
 brew "git-lfs"
 brew "gh"
-brew "xcodesorg/made/xcodes"
+brew "xcodes"
 brew "aria2"
 brew "rbenv"
 brew "ruby-build"
