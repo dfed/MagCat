@@ -33,6 +33,17 @@ function gprune {
   git fetch -p --force && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done
 }
 
+function gpruneworktree {
+  local current_worktree=$(git rev-parse --show-toplevel)
+  local parent_dir=$(dirname "$current_worktree")
+  git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | while read worktree; do
+    if [ "$(dirname "$worktree")" != "$parent_dir" ]; then
+      echo "Removing worktree: $worktree"
+      git worktree remove "$worktree" || echo "Failed to remove $worktree"
+    fi
+  done
+}
+
 alias podpush='bundle exec pod trunk push --verbose'
 
 # requires `brew install terminal-notifier`
