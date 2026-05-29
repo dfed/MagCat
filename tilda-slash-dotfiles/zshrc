@@ -30,7 +30,22 @@ tabs -4
 export GPG_TTY=$(tty)
 
 function gprune {
-  git fetch -p --force && for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done
+  git fetch -p --force || return
+  # `git branch -vv` prefixes branches checked out in another worktree with `+`
+  # and the current branch with `*`; strip those markers to get the bare name.
+  for branch in `git branch -vv | grep ': gone]' | sed 's/^[ *+]*//' | awk '{print $1}'`; do
+    # If the gone branch is checked out in a worktree, remove the worktree first
+    # (otherwise `git branch -D` refuses to delete it).
+    local worktree=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
+      /^worktree / { wt = substr($0, 10) }
+      $0 == "branch " b { print wt }
+    ')
+    if [ -n "$worktree" ]; then
+      echo "Removing worktree: $worktree (branch $branch is gone)"
+      git worktree remove "$worktree" || { echo "Failed to remove worktree $worktree; skipping branch $branch"; continue; }
+    fi
+    git branch -D "$branch"
+  done
 }
 
 function gpruneworktree {
