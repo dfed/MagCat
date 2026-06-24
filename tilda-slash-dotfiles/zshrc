@@ -31,21 +31,90 @@ export GPG_TTY=$(tty)
 
 function gprune {
   git fetch -p --force || return
-  # `git branch -vv` prefixes branches checked out in another worktree with `+`
-  # and the current branch with `*`; strip those markers to get the bare name.
-  for branch in `git branch -vv | grep ': gone]' | sed 's/^[ *+]*//' | awk '{print $1}'`; do
-    # If the gone branch is checked out in a worktree, remove the worktree first
-    # (otherwise `git branch -D` refuses to delete it).
+
+  # Determine the default branch (e.g. origin/main) so we know what "merged" means.
+  local base
+  base=$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)
+  if [ -z "$base" ]; then
+    if git show-ref --verify --quiet refs/remotes/origin/main; then base=origin/main
+    elif git show-ref --verify --quiet refs/remotes/origin/master; then base=origin/master
+    else echo "gprune: cannot determine default branch; skipping merged sweep"; fi
+  fi
+  local base_local=${base#origin/}
+
+  # Reap abandoned Claude Code agent worktrees. The harness locks each worktree
+  # with a reason like "claude agent <id> (pid 12345 start ...)" and the lock
+  # outlives the process: a lock whose pid is dead is abandoned (reap it), while
+  # a lock whose pid is still alive belongs to a running session (never touch it).
+  # `git worktree remove` refuses any locked worktree without `-f -f` regardless.
+  # Process substitution (not a pipe) keeps the loop in this shell so the
+  # locked_by_live map populates -- zsh runs the right side of a pipe in a subshell.
+  typeset -A locked_by_live   # worktree path -> live pid still holding its lock
+  while IFS=$'\t' read -r worktree reason; do
+    local pid=$(echo "$reason" | sed -n 's/.*(pid \([0-9][0-9]*\).*/\1/p')
+    [ -z "$pid" ] && continue
+    if kill -0 "$pid" 2>/dev/null; then
+      locked_by_live[$worktree]=$pid
+    else
+      echo "Removing abandoned worktree: $worktree (agent pid $pid is dead)"
+      git worktree remove --force --force "$worktree" || echo "Failed to force-remove $worktree"
+    fi
+  done < <(git worktree list --porcelain | awk '
+    /^worktree /{wt=substr($0,10)}
+    /^locked/{print wt "\t" substr($0,8)}
+  ')
+
+  # Helper: remove the worktree (if any) backing a branch, then delete the branch.
+  # `git branch -vv`/`--merged` prefix worktree-checked-out branches with `+` and
+  # the current branch with `*`; callers strip those before passing $1 here.
+  _gprune_drop() {
+    local branch=$1 why=$2
     local worktree=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
       /^worktree / { wt = substr($0, 10) }
       $0 == "branch " b { print wt }
     ')
     if [ -n "$worktree" ]; then
-      echo "Removing worktree: $worktree (branch $branch is gone)"
-      git worktree remove "$worktree" || { echo "Failed to remove worktree $worktree; skipping branch $branch"; continue; }
+      # A worktree held by a live session can't (and shouldn't) be removed; skip
+      # it quietly instead of attempting a doomed `git worktree remove`.
+      if [ -n "${locked_by_live[$worktree]}" ]; then
+        echo "Skipping $branch ($why): worktree held by live session (pid ${locked_by_live[$worktree]})"
+        return 1
+      fi
+      echo "Removing worktree: $worktree (branch $branch $why)"
+      git worktree remove "$worktree" || { echo "Failed to remove worktree $worktree; skipping branch $branch"; return 1; }
     fi
     git branch -D "$branch"
+  }
+
+  # Delete every branch already merged into the default branch (keeping the
+  # default branch itself, main/master, and whatever is currently checked out).
+  if [ -n "$base" ]; then
+    local current=$(git rev-parse --abbrev-ref HEAD)
+    for branch in `git branch --merged "$base" | sed 's/^[ *+]*//' | awk '{print $1}'`; do
+      case "$branch" in
+        "$base_local"|main|master|"$current") continue ;;
+      esac
+      _gprune_drop "$branch" "is merged into $base"
+    done
+  fi
+
+  # Delete branches whose upstream is gone (covers merged-and-deleted branches
+  # whose tip isn't an ancestor of the default branch, e.g. squash-merged PRs).
+  for branch in `git branch -vv | grep ': gone]' | sed 's/^[ *+]*//' | awk '{print $1}'`; do
+    _gprune_drop "$branch" "is gone"
   done
+
+  unfunction _gprune_drop
+  git worktree prune
+
+  # Surface live sessions that blocked cleanup so they can be dealt with: if one
+  # is a stale orchestrator, terminate it and re-run to reap its worktrees.
+  if (( ${#locked_by_live} )); then
+    local pids=$(print -l ${(v)locked_by_live} | sort -un | tr '\n' ' ')
+    echo ""
+    echo "Skipped ${#locked_by_live} worktree(s) locked by live session(s): pid(s) ${pids}"
+    echo "If any is a stale/abandoned session, kill it and re-run gprune to reap its worktrees."
+  fi
 }
 
 function gpruneworktree {
