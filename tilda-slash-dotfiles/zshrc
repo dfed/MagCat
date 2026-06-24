@@ -1,10 +1,10 @@
 # Ensure our .ssh/id_rsa passphrase is unlocked in the keychain
-ssh-add --apple-load-keychain > /dev/null 2>&1
+ssh-add --apple-load-keychain >/dev/null 2>&1
 
 PATH="$HOME/.local/bin:$PATH"
 
-alias cp='cp -i'	# prompt before overwriting file
-alias mv='mv -i'	# same
+alias cp='cp -i' # prompt before overwriting file
+alias mv='mv -i' # same
 alias ls='ls -lagP'
 alias ll="ls -l"
 alias gtar="tar -czvf"
@@ -30,182 +30,176 @@ tabs -4
 export GPG_TTY=$(tty)
 
 function gprune {
-  git fetch -p --force || return
+    git fetch -p --force || return
 
-  # Determine the default branch (e.g. origin/main) so we know what "merged" means.
-  local base
-  base=$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)
-  if [ -z "$base" ]; then
-    if git show-ref --verify --quiet refs/remotes/origin/main; then base=origin/main
-    elif git show-ref --verify --quiet refs/remotes/origin/master; then base=origin/master
-    else echo "gprune: cannot determine default branch; skipping merged sweep"; fi
-  fi
-  local base_local=${base#origin/}
-
-  # Reap abandoned Claude Code agent worktrees. The harness locks each worktree
-  # with a reason like "claude agent <id> (pid 12345 start ...)" and the lock
-  # outlives the process: a lock whose pid is dead is abandoned (reap it), while
-  # a lock whose pid is still alive belongs to a running session (never touch it).
-  # `git worktree remove` refuses any locked worktree without `-f -f` regardless.
-  # Process substitution (not a pipe) keeps the loop in this shell so the
-  # locked_by_live map populates -- zsh runs the right side of a pipe in a subshell.
-  typeset -A locked_by_live   # worktree path -> live pid still holding its lock
-  while IFS=$'\t' read -r worktree reason; do
-    local pid=$(echo "$reason" | sed -n 's/.*(pid \([0-9][0-9]*\).*/\1/p')
-    [ -z "$pid" ] && continue
-    if kill -0 "$pid" 2>/dev/null; then
-      locked_by_live[$worktree]=$pid
-    else
-      echo "Removing abandoned worktree: $worktree (agent pid $pid is dead)"
-      git worktree remove --force --force "$worktree" || echo "Failed to force-remove $worktree"
+    # Determine the default branch (e.g. origin/main) so we know what "merged" means.
+    local base
+    base=$(git rev-parse --abbrev-ref origin/HEAD 2>/dev/null)
+    if [ -z "$base" ]; then
+        if git show-ref --verify --quiet refs/remotes/origin/main; then
+            base=origin/main
+        elif git show-ref --verify --quiet refs/remotes/origin/master; then
+            base=origin/master
+        else echo "gprune: cannot determine default branch; skipping merged sweep"; fi
     fi
-  done < <(git worktree list --porcelain | awk '
+    local base_local=${base#origin/}
+
+    # Reap abandoned Claude Code agent worktrees. The harness locks each worktree
+    # with a reason like "claude agent <id> (pid 12345 start ...)" and the lock
+    # outlives the process: a lock whose pid is dead is abandoned (reap it), while
+    # a lock whose pid is still alive belongs to a running session (never touch it).
+    # `git worktree remove` refuses any locked worktree without `-f -f` regardless.
+    # Process substitution (not a pipe) keeps the loop in this shell so the
+    # locked_by_live map populates -- zsh runs the right side of a pipe in a subshell.
+    typeset -A locked_by_live # worktree path -> live pid still holding its lock
+    while IFS=$'\t' read -r worktree reason; do
+        local pid=$(echo "$reason" | sed -n 's/.*(pid \([0-9][0-9]*\).*/\1/p')
+        [ -z "$pid" ] && continue
+        if kill -0 "$pid" 2>/dev/null; then
+            locked_by_live[$worktree]=$pid
+        else
+            echo "Removing abandoned worktree: $worktree (agent pid $pid is dead)"
+            git worktree remove --force --force "$worktree" || echo "Failed to force-remove $worktree"
+        fi
+    done < <(git worktree list --porcelain | awk '
     /^worktree /{wt=substr($0,10)}
     /^locked/{print wt "\t" substr($0,8)}
   ')
 
-  # Helper: remove the worktree (if any) backing a branch, then delete the branch.
-  # `git branch -vv`/`--merged` prefix worktree-checked-out branches with `+` and
-  # the current branch with `*`; callers strip those before passing $1 here.
-  _gprune_drop() {
-    local branch=$1 why=$2
-    local worktree=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
+    # Helper: remove the worktree (if any) backing a branch, then delete the branch.
+    # `git branch -vv`/`--merged` prefix worktree-checked-out branches with `+` and
+    # the current branch with `*`; callers strip those before passing $1 here.
+    _gprune_drop() {
+        local branch=$1 why=$2
+        local worktree=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
       /^worktree / { wt = substr($0, 10) }
       $0 == "branch " b { print wt }
     ')
-    if [ -n "$worktree" ]; then
-      # A worktree held by a live session can't (and shouldn't) be removed; skip
-      # it quietly instead of attempting a doomed `git worktree remove`.
-      if [ -n "${locked_by_live[$worktree]}" ]; then
-        echo "Skipping $branch ($why): worktree held by live session (pid ${locked_by_live[$worktree]})"
-        return 1
-      fi
-      echo "Removing worktree: $worktree (branch $branch $why)"
-      git worktree remove "$worktree" || { echo "Failed to remove worktree $worktree; skipping branch $branch"; return 1; }
-    fi
-    git branch -D "$branch"
-  }
+        if [ -n "$worktree" ]; then
+            # A worktree held by a live session can't (and shouldn't) be removed; skip
+            # it quietly instead of attempting a doomed `git worktree remove`.
+            if [ -n "${locked_by_live[$worktree]}" ]; then
+                echo "Skipping $branch ($why): worktree held by live session (pid ${locked_by_live[$worktree]})"
+                return 1
+            fi
+            echo "Removing worktree: $worktree (branch $branch $why)"
+            git worktree remove "$worktree" || {
+                echo "Failed to remove worktree $worktree; skipping branch $branch"
+                return 1
+            }
+        fi
+        git branch -D "$branch"
+    }
 
-  # Delete every branch already merged into the default branch (keeping the
-  # default branch itself, main/master, and whatever is currently checked out).
-  if [ -n "$base" ]; then
-    local current=$(git rev-parse --abbrev-ref HEAD)
-    for branch in `git branch --merged "$base" | sed 's/^[ *+]*//' | awk '{print $1}'`; do
-      case "$branch" in
-        "$base_local"|main|master|"$current") continue ;;
-      esac
-      _gprune_drop "$branch" "is merged into $base"
+    # Delete every branch already merged into the default branch (keeping the
+    # default branch itself, main/master, and whatever is currently checked out).
+    if [ -n "$base" ]; then
+        local current=$(git rev-parse --abbrev-ref HEAD)
+        for branch in $(git branch --merged "$base" | sed 's/^[ *+]*//' | awk '{print $1}'); do
+            case "$branch" in
+            "$base_local" | main | master | "$current") continue ;;
+            esac
+            _gprune_drop "$branch" "is merged into $base"
+        done
+    fi
+
+    # Delete branches whose upstream is gone (covers merged-and-deleted branches
+    # whose tip isn't an ancestor of the default branch, e.g. squash-merged PRs).
+    for branch in $(git branch -vv | grep ': gone]' | sed 's/^[ *+]*//' | awk '{print $1}'); do
+        _gprune_drop "$branch" "is gone"
     done
-  fi
 
-  # Delete branches whose upstream is gone (covers merged-and-deleted branches
-  # whose tip isn't an ancestor of the default branch, e.g. squash-merged PRs).
-  for branch in `git branch -vv | grep ': gone]' | sed 's/^[ *+]*//' | awk '{print $1}'`; do
-    _gprune_drop "$branch" "is gone"
-  done
+    unfunction _gprune_drop
+    git worktree prune
 
-  unfunction _gprune_drop
-  git worktree prune
-
-  # Surface live sessions that blocked cleanup so they can be dealt with: if one
-  # is a stale orchestrator, terminate it and re-run to reap its worktrees.
-  if (( ${#locked_by_live} )); then
-    local pids=$(print -l ${(v)locked_by_live} | sort -un | tr '\n' ' ')
-    echo ""
-    echo "Skipped ${#locked_by_live} worktree(s) locked by live session(s): pid(s) ${pids}"
-    echo "If any is a stale/abandoned session, kill it and re-run gprune to reap its worktrees."
-  fi
-}
-
-function gpruneworktree {
-  local current_worktree=$(git rev-parse --show-toplevel)
-  local parent_dir=$(dirname "$current_worktree")
-  git worktree list --porcelain | grep '^worktree ' | sed 's/^worktree //' | while read worktree; do
-    if [ "$(dirname "$worktree")" != "$parent_dir" ]; then
-      echo "Removing worktree: $worktree"
-      git worktree remove "$worktree" || echo "Failed to remove $worktree"
+    # Surface live sessions that blocked cleanup so they can be dealt with: if one
+    # is a stale orchestrator, terminate it and re-run to reap its worktrees.
+    if ((${#locked_by_live})); then
+        local pids=$(print -l ${(v)locked_by_live} | sort -un | tr '\n' ' ')
+        echo ""
+        echo "Skipped ${#locked_by_live} worktree(s) locked by live session(s): pid(s) ${pids}"
+        echo "If any is a stale/abandoned session, kill it and re-run gprune to reap its worktrees."
     fi
-  done
 }
 
 alias podpush='bundle exec pod trunk push --verbose'
 
 # requires `brew install terminal-notifier`
 function notify {
-  # Get the exit status of the last-run command.
-  local retVal=$?
-  local title="Succeeded"
-  # Capture the parameter list for later display.
-  local message=$@
-  if [ $# -ne 0 ]; then
-    # Execute the parameters.
-    eval $@
-  else
-    # Get the last line of history.
-    lastCommandIndex="$(($HISTCMD-1))"
-    message="$history[$lastCommandIndex]"
-  fi
-  if [ $retVal -ne 0 ]; then
-    title="Failed"
-  fi
-  # Notify the user that the command is done.
-  terminal-notifier -title "$title" -message "$message" -sound "default" -ignoreDnD
+    # Get the exit status of the last-run command.
+    local retVal=$?
+    local title="Succeeded"
+    # Capture the parameter list for later display.
+    local message=$@
+    if [ $# -ne 0 ]; then
+        # Execute the parameters.
+        eval $@
+    else
+        # Get the last line of history.
+        lastCommandIndex="$(($HISTCMD - 1))"
+        message="$history[$lastCommandIndex]"
+    fi
+    if [ $retVal -ne 0 ]; then
+        title="Failed"
+    fi
+    # Notify the user that the command is done.
+    terminal-notifier -title "$title" -message "$message" -sound "default" -ignoreDnD
 }
 
 function grb {
-  # Use a subshell to avoid `set -o err_return` infecting the calling shell.
-  (
-    set -o err_return
+    # Use a subshell to avoid `set -o err_return` infecting the calling shell.
+    (
+        set -o err_return
 
-    command=$1
-    if [ $# -lt 2 ]; then
-      echo 'Incorrect number of arguments given'
-      command='help'
-    fi
-    current_branch=$(git rev-parse --abbrev-ref HEAD)
-    if [ $command = 'new' ]; then
-      new_branch=$2
-      git checkout -b $new_branch
-      if [ $# -gt 2 ]; then
-        git cherry-pick ${@:3}
-      fi
-      git push --no-verify --set-upstream origin $new_branch\:refs/heads/$new_branch
-
-    elif [ $command = 'mv' ]; then
-      old_branch=$current_branch
-      new_branch=$2
-      git push --no-verify origin $old_branch\:refs/heads/$new_branch
-      git fetch origin $new_branch\:$new_branch
-      git checkout $new_branch
-      git branch --set-upstream-to origin/$new_branch
-      git branch -D $old_branch
-      git push --no-verify origin :refs/heads/$old_branch
-
-    elif [ $command = 'rm' ]; then
-      branch=$2
-      git push --no-verify origin :refs/heads/$branch
-      if [ $current_branch = $branch ]; then
-        if git rev-parse --verify --quiet main > /dev/null; then
-          git checkout main
-          git branch -D $branch
-        elif git rev-parse --verify --quiet master > /dev/null; then
-          git checkout master
-          git branch -D $branch
-        else
-          echo "Deleted current branch on origin. Change branches and then run 'git branch -D $branch'"
+        command=$1
+        if [ $# -lt 2 ]; then
+            echo 'Incorrect number of arguments given'
+            command='help'
         fi
-      else
-        git branch -D $branch
-      fi
-    else
-      echo "usage: grb <command> <branch_name>
+        current_branch=$(git rev-parse --abbrev-ref HEAD)
+        if [ $command = 'new' ]; then
+            new_branch=$2
+            git checkout -b $new_branch
+            if [ $# -gt 2 ]; then
+                git cherry-pick ${@:3}
+            fi
+            git push --no-verify --set-upstream origin $new_branch\:refs/heads/$new_branch
+
+        elif [ $command = 'mv' ]; then
+            old_branch=$current_branch
+            new_branch=$2
+            git push --no-verify origin $old_branch\:refs/heads/$new_branch
+            git fetch origin $new_branch\:$new_branch
+            git checkout $new_branch
+            git branch --set-upstream-to origin/$new_branch
+            git branch -D $old_branch
+            git push --no-verify origin :refs/heads/$old_branch
+
+        elif [ $command = 'rm' ]; then
+            branch=$2
+            git push --no-verify origin :refs/heads/$branch
+            if [ $current_branch = $branch ]; then
+                if git rev-parse --verify --quiet main >/dev/null; then
+                    git checkout main
+                    git branch -D $branch
+                elif git rev-parse --verify --quiet master >/dev/null; then
+                    git checkout master
+                    git branch -D $branch
+                else
+                    echo "Deleted current branch on origin. Change branches and then run 'git branch -D $branch'"
+                fi
+            else
+                git branch -D $branch
+            fi
+        else
+            echo "usage: grb <command> <branch_name>
 
       new <branch_name>\t\tcreate a new branch named 'branch_name'
       new <branch_name> <sha1>\tcreate a new branch named 'branch_name' and cherry pick shas onto that branch before pushing.
       mv <branch_name>\t\trename current branch to 'branch_name'
       rm <branch_name>\t\tdelete branch 'branch_name'"
-    fi
-  )
+        fi
+    )
 }
 
 alias entitlements="codesign -vvvv -d --entitlements -"
@@ -223,7 +217,7 @@ autoload -U up-line-or-beginning-search
 autoload -U down-line-or-beginning-search
 zle -N up-line-or-beginning-search
 zle -N down-line-or-beginning-search
-bindkey "^[[A" up-line-or-beginning-search # Up
+bindkey "^[[A" up-line-or-beginning-search   # Up
 bindkey "^[[B" down-line-or-beginning-search # Down
 
 # Source our config files.
