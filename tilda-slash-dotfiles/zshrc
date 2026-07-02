@@ -44,6 +44,26 @@ function gprune {
     fi
     local base_local=${base#origin/}
 
+    # A worktree is the live home of a running Claude session when some process's
+    # command line carries the matching `--session-id cse_<id>`: the harness names
+    # each worktree `...cse_<id>`, so that session id is a substring of the worktree
+    # path. Key off this, NOT the process cwd (a session may `cd` away to run data
+    # analysis) and NOT git worktree locks (the harness does not set them) -- both
+    # of those let earlier versions reap live, actively-working sessions and nuke
+    # their checkout mid-run.
+    local live_sessions
+    live_sessions=$(ps -Ao command= | sed -n 's/.*--session-id \(cse_[A-Za-z0-9_-]*\).*/\1/p' | sort -u)
+    _gprune_is_live_session_home() {
+        local worktree=$1 sid
+        for sid in ${(f)live_sessions}; do
+            [ -n "$sid" ] || continue
+            case "$worktree" in
+            *"$sid"*) return 0 ;;
+            esac
+        done
+        return 1
+    }
+
     # Reap abandoned Claude Code agent worktrees. The harness locks each worktree
     # with a reason like "claude agent <id> (pid 12345 start ...)" and the lock
     # outlives the process: a lock whose pid is dead is abandoned (reap it), while
@@ -56,6 +76,11 @@ function gprune {
         local pid=$(echo "$reason" | sed -n 's/.*(pid \([0-9][0-9]*\).*/\1/p')
         [ -z "$pid" ] && continue
         if kill -0 "$pid" 2>/dev/null; then
+            locked_by_live[$worktree]=$pid
+        elif _gprune_is_live_session_home "$worktree"; then
+            # Lock pid is dead but a live Claude session (e.g. one resumed under a
+            # new pid) still calls this worktree home -- keep it.
+            echo "Skipping $worktree: lock pid $pid is dead but a live Claude session owns it"
             locked_by_live[$worktree]=$pid
         else
             echo "Removing abandoned worktree: $worktree (agent pid $pid is dead)"
@@ -76,10 +101,11 @@ function gprune {
       $0 == "branch " b { print wt }
     ')
         if [ -n "$worktree" ]; then
-            # A worktree held by a live session can't (and shouldn't) be removed; skip
-            # it quietly instead of attempting a doomed `git worktree remove`.
-            if [ -n "${locked_by_live[$worktree]}" ]; then
-                echo "Skipping $branch ($why): worktree held by live session (pid ${locked_by_live[$worktree]})"
+            # A worktree that is the home of a live Claude session must never be
+            # removed -- doing so nukes that session's checkout mid-run. Skip it
+            # quietly instead of attempting a doomed/destructive `git worktree remove`.
+            if [ -n "${locked_by_live[$worktree]}" ] || _gprune_is_live_session_home "$worktree"; then
+                echo "Skipping $branch ($why): worktree is a live Claude session home"
                 return 1
             fi
             echo "Removing worktree: $worktree (branch $branch $why)"
@@ -109,7 +135,7 @@ function gprune {
         _gprune_drop "$branch" "is gone"
     done
 
-    unfunction _gprune_drop
+    unfunction _gprune_drop _gprune_is_live_session_home
     git worktree prune
 
     # Surface live sessions that blocked cleanup so they can be dealt with: if one
