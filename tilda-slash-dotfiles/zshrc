@@ -150,7 +150,10 @@ function gprune {
 
 alias podpush='bundle exec pod trunk push --verbose'
 
-# requires `brew install terminal-notifier`
+# requires `brew install terminal-notifier` (provided by the Brewfile).
+# Call the Homebrew binary by absolute path: a transitive `bundle install`
+# (e.g. fastlane) can drop an Intel-only terminal-notifier gem into the global
+# gemset, whose rbenv shim shadows the arm64 Homebrew build on PATH.
 function notify {
     # Get the exit status of the last-run command.
     local retVal=$?
@@ -169,7 +172,7 @@ function notify {
         title="Failed"
     fi
     # Notify the user that the command is done.
-    terminal-notifier -title "$title" -message "$message" -sound "default" -ignoreDnD
+    /opt/homebrew/bin/terminal-notifier -title "$title" -message "$message" -sound "default" -ignoreDnD
 }
 
 function grb {
