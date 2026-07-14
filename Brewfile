@@ -4,6 +4,10 @@
 brew "git"
 brew "git-lfs"
 brew "gh"
+# Lets GPG read its passphrase from the macOS login Keychain (wired up in
+# install.sh) so commit signing works in headless/background sessions instead of
+# timing out on a terminal-only pinentry prompt.
+brew "pinentry-mac"
 brew "xcodes"
 brew "aria2"
 brew "rbenv"

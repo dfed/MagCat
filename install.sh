@@ -23,6 +23,19 @@ cd $HOME/source/MagCat
 ./tilda-slash-preferences/install_preferences.sh $@
 ./tilda-slash-dotfiles/install_dotfiles.sh $@
 
+# Point gpg-agent at pinentry-mac so GPG commit signing reads the passphrase from
+# the macOS login Keychain. Without this, gpg falls back to a terminal pinentry
+# (pinentry-curses) that can't prompt in a headless/background session (e.g. an
+# agent-driven worktree), so signing times out once the passphrase cache lapses.
+# Idempotent: only appends the line if it isn't already there.
+mkdir -p "$HOME/.gnupg"
+chmod 700 "$HOME/.gnupg"
+if ! grep -q '^pinentry-program' "$HOME/.gnupg/gpg-agent.conf" 2>/dev/null; then
+	echo "- Configuring gpg-agent to use pinentry-mac"
+	echo "pinentry-program $(command -v pinentry-mac || echo /opt/homebrew/bin/pinentry-mac)" >>"$HOME/.gnupg/gpg-agent.conf"
+	gpgconf --kill gpg-agent 2>/dev/null || true
+fi
+
 mkdir -p $HOME/Library/Developer/Xcode/UserData/KeyBindings/
 ln -sF $HOME/source/MagCat/xcode/Default.idekeybindings $HOME/Library/Developer/Xcode/UserData/KeyBindings/Default.idekeybindings
 
