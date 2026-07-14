@@ -29,6 +29,12 @@
 	clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
+[gpg]
+	# Pin the signing toolchain to GPG Suite's gpg (Keychain-integrated pinentry)
+	# so commit signing doesn't break when another gpg (e.g. Homebrew's) lands
+	# earlier in PATH and hijacks an unset gpg.program — its pinentry has no
+	# Keychain and can't prompt in a headless session, so signing times out.
+	program = /usr/local/MacGPG2/bin/gpg2
 [commit]
 	gpgsign = true
 [init]
