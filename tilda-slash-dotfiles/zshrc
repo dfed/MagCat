@@ -3,8 +3,6 @@ ssh-add --apple-load-keychain >/dev/null 2>&1
 
 PATH="$HOME/.local/bin:$PATH"
 
-alias cp='cp -i' # prompt before overwriting file
-alias mv='mv -i' # same
 alias ls='ls -lagP'
 alias ll="ls -l"
 alias gtar="tar -czvf"
